@@ -61,8 +61,8 @@ class ReadingManager {
     }
 
     // Изменение: Использование UserRole вместо строки для сравнения
-    public List<Reading> getLatestReadings(int userId, UserAction userRole) {
-        if (userRole == UserAction.ADMIN) {
+    public List<Reading> getLatestReadings(int userId, UserRoles userRole) {
+        if (userRole == UserRoles.ADMIN) {
             return getAllReadings();
         } else {
             return getReadingsForUser(userId);
@@ -71,9 +71,10 @@ class ReadingManager {
 
     // Изменение: Добавление логики для получения фактических данных
     private List<Reading> getAllReadings() {
-        return getAllReadingsForUser(UserAction.ADMIN);
+        return getAllReadingsForUser(UserRoles.ADMIN);
     }
-    private List<Reading> getAllReadingsForUser(UserAction userRole) {
+
+    private List<Reading> getAllReadingsForUser(UserRoles userRole) {
         List<Reading> allReadings = new ArrayList<>();
         for (List<Reading> userReadings : readingsByUser.values()) {
             allReadings.addAll(userReadings);
@@ -81,14 +82,8 @@ class ReadingManager {
         return allReadings;
     }
 
-    // Изменение: Убран параметр userRole, так как не используется в методе
-    public List<Reading> getLatestReadings(int userId) {
-        // Возвращаем список показаний для пользователя, или пустой список, если нет данных
-        return getReadingsForUser(userId);
-    }
 
-    // Изменение: Убран параметр userRole, так как не используется в методе
-    public List<Reading> getReadingHistory(int userId, UserAction userRole) {
+    public List<Reading> getReadingHistory(int userId) {
         // Возвращаем список показаний для пользователя, или пустой список, если нет данных
         return getReadingsForUser(userId);
     }

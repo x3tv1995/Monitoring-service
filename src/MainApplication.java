@@ -7,40 +7,15 @@ import java.util.List;
 public class MainApplication {
     private final ReadingManager readingManager;
     private final UserManager userManager;
-    private final UserAction userRole;
 
-    public MainApplication(UserManager userManager, ReadingManager readingManager, UserAction userRole) {
+
+    public MainApplication(UserManager userManager, ReadingManager readingManager) {
         this.userManager = userManager;
         this.readingManager = readingManager;
-        this.userRole = userRole;
-    }
-    public UserAction getUserRole() {
-        return userRole;
-    }
-    private boolean hasPermission(User user, UserAction action) {
-        // Получаем роль пользователя
-        String userRole = user.getRole();
 
-        // Проверяем разрешения в зависимости от роли
-        switch (userRole) {
-            case "ADMIN":
-                // Администратор имеет права на все действия
-                return true;
-            case "USER":
-                // Обычный пользователь имеет ограниченные права
-                switch (action) {
-                    case ADD_NEW_POKAZANIYA:
-                        // Разрешено добавление новых показаний
-                        return true;
-                    // Добавьте другие разрешения для обычного пользователя при необходимости
-                    default:
-                        return false;
-                }
-                // Добавьте логику для других ролей при необходимости
-            default:
-                return false;
-        }
     }
+
+
     // Метод для обработки эндпоинта ввода данных по счетчику
     public void submitCounterData(User user) {
         try (BufferedReader reader = new BufferedReader(new InputStreamReader(System.in))) {
@@ -71,9 +46,9 @@ public class MainApplication {
 
 
     // Метод для обработки эндпоинта получения актуальных показаний
-    public List<Reading> getActualReadings(int userId, UserAction userRole) {
+    public List<Reading> getActualReadings(User user) {
         // Изменение: Добавлена логика обработки полученных данных и их вывода
-        List<Reading> actualReadings = readingManager.getLatestReadings(userId, userRole);
+        List<Reading> actualReadings = readingManager.getLatestReadings(user.getId(), user.getRole());
         System.out.println("Actual Readings: " + actualReadings);
         return actualReadings;
     }
@@ -92,14 +67,12 @@ public class MainApplication {
     }
 
     // Метод для обработки эндпоинта получения истории показаний
-    public List<Reading> getReadingHistory(int userId, UserAction userRole) {
+    public List<Reading> getReadingHistory(User user) {
         // Изменение: Добавлена логика обработки полученных данных и их вывода
-        List<Reading> historyReadings = readingManager.getReadingHistory(userId, userRole);
+        List<Reading> historyReadings = readingManager.getReadingHistory(user.getId());
         System.out.println("Reading History: " + historyReadings);
         return historyReadings;
     }
 
 
-
-
-    }
+}

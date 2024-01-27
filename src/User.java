@@ -13,13 +13,13 @@ public class User implements Serializable {
     private String password;
 
 
-    public void setRole(String role) {
+    public void setRole(UserRoles role) {
         this.role = role;
     }
 
-    private  String role;
+    private UserRoles role;
 
-    public User( String username, String password, String role) {
+    public User(String username, String password, UserRoles role) {
         Id = UserCounter.incrementAndGet();
         this.username = username;
         this.password = password;
@@ -38,9 +38,11 @@ public class User implements Serializable {
     public String getPassword() {
         return password;
     }
-    public String getRole() {
+
+    public UserRoles getRole() {
         return role;
     }
+
     public void setUsername(String username) {
         this.username = username;
     }
@@ -49,8 +51,8 @@ public class User implements Serializable {
         this.password = password;
     }
 
-    public static String inputUserAuthorization(BufferedReader reader, UserManager userManager) {
-        User existingUser = null;
+    public static User inputUserAuthorization(BufferedReader reader, UserManager userManager) {
+
         try {
             System.out.println("Введите имя пользователя:");
             String username = reader.readLine();
@@ -59,19 +61,19 @@ public class User implements Serializable {
             String password = reader.readLine();
 
 
-                for (User user : userManager.getUsers()) {
-                    if (user.getUsername().equals(username) && user.getPassword().equals(password)) {
-                        System.out.println("Авторизация успешна.");
-                        // Установка роли пользователя
-                        return user.getRole();
-                    }
+            for (User user : userManager.getUsers()) {
+                if (user.getUsername().equals(username) && user.getPassword().equals(password)) {
+                    System.out.println("Авторизация успешна.");
+                    // Установка роли пользователя
+                    return user;
                 }
+            }
 
 
             System.out.println("Пользователь с введенными данными не найден. Вам нужно зарегистрироваться");
         } catch (IOException e) {
             e.printStackTrace();
-        }catch (NullPointerException e) {
+        } catch (NullPointerException e) {
             e.printStackTrace();
         }
         return null;
@@ -79,11 +81,11 @@ public class User implements Serializable {
 
     public static User inputUserRegistration(BufferedReader reader) {
         try {
-            System.out.println("Введите имя пользователя:");
+            System.out.println("Введите имя нового пользователя:");
             String username = reader.readLine();
             System.out.println("Введите пароль:");
             String password = reader.readLine();
-            User user = new User(username, password, UserAction.REGISTER.getDescription());
+            User user = new User(username, password, UserRoles.USER);
             user.setUsername(username);
             user.setPassword(password);
             return user;
@@ -92,7 +94,6 @@ public class User implements Serializable {
         }
         return null;
     }
-
 
 
 }
