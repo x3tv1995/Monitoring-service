@@ -150,6 +150,60 @@ public class Main {
             }
         });
     }
+    private static void submitCounterData(User user, BufferedReader reader) throws IOException {
+        System.out.println("Введите данные по счетчику:");
+        double hotWaterCounter;
+        while (true) {
+            try {
+                System.out.println("Горячая вода:");
+                hotWaterCounter = Double.parseDouble(reader.readLine());
+                break;
+            } catch (NumberFormatException e) {
+                System.out.println("Некорректный ввод. Введите числовое значение: ");
+            }
+        }
 
-/**
- * П
+        double coldWaterCounter;
+        while (true) {
+            try {
+                System.out.println("Холодная вода:");
+                coldWaterCounter = Double.parseDouble(reader.readLine());
+                break;
+            } catch (NumberFormatException e) {
+                System.out.println("Некорректный ввод. Введите числовое значение:");
+            }
+        }
+
+
+        int month;
+        while (true) {
+            System.out.println("Введите месяц (от 1 до 12):");
+            try {
+                month = Integer.parseInt(reader.readLine());
+                if (month >= 1 && month <= 12) {
+                    break;
+                } else {
+                    System.out.println("Месяц должен быть в пределах от 1 до 12.");
+                }
+            } catch (NumberFormatException e) {
+                System.out.println("Некорректный ввод. Введите числовое значение:");
+            }
+        }
+
+        // Создаем объект Reading с введенными данными
+        Reading newReading = new Reading(user.getId(), String.valueOf(month), hotWaterCounter, coldWaterCounter);
+
+        // Передаем объект Reading для обработки
+        readingManager.submitReading(newReading, user);
+
+        // Добавляем введенное показание в список поданных пользователем
+        user.addSubmittedReading(newReading);
+
+        System.out.println("Данные по счетчику успешно добавлены.");
+    }
+
+
+}
+
+
+}

@@ -182,6 +182,10 @@ class ReadingManager {
         }
         return monthReadings;
     }
+    private List<Reading> getReadingsForUser(int userId) {
+        return readingsByUser.getOrDefault(userId, new ArrayList<>());
+    }
+}
 
 /**
  * Метод возвращает показания для конкретного пользователя.
