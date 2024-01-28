@@ -58,7 +58,7 @@ public class UserManager {
         // Пример: Предположим, у вас есть объект Reading, который вы хотите добавить
         Reading newReading = new Reading(user.getId(), 150.0, "January");
         ReadingManager readingManager = new ReadingManager();
-        readingManager.submitReading(newReading);
+        readingManager.submitReading(newReading,user);
         System.out.println("Новые показания успешно добавлены.");
     }
 

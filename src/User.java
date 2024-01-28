@@ -2,6 +2,8 @@ import java.io.BufferedReader;
 import java.io.IOException;
 
 import java.io.Serializable;
+import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -9,22 +11,45 @@ public class User implements Serializable {
     private static final long serialVersionUID = -8054866143814427354L;
     private static final AtomicInteger UserCounter = new AtomicInteger(0); // Счетчик пользователей
     private final int Id;
+
     private String username;
     private String password;
+    private UserRoles role;
+    private static List<Reading> submittedReadings;
+
+    public User(String username, String password, UserRoles role, List<Reading> submittedReadings) {
+        Id = UserCounter.incrementAndGet();
+        this.username = username;
+        this.password = password;
+        this.role = role;
+        this.submittedReadings = submittedReadings;
+    }
+
+    private LocalDateTime lastSubmissionDate;
+
+    public List<Reading> getSubmittedReadings() {
+        return submittedReadings;
+    }
+    public void addSubmittedReading(Reading reading) {
+        submittedReadings.add(reading);
+    }
+
+    public LocalDateTime getLastSubmissionDate() {
+        return lastSubmissionDate;
+    }
+
+    public void setLastSubmissionDate(LocalDateTime lastSubmissionDate) {
+        this.lastSubmissionDate = lastSubmissionDate;
+    }
 
 
     public void setRole(UserRoles role) {
         this.role = role;
     }
 
-    private UserRoles role;
 
-    public User(String username, String password, UserRoles role) {
-        Id = UserCounter.incrementAndGet();
-        this.username = username;
-        this.password = password;
-        this.role = role;
-    }
+
+
 
 
     public int getId() {
@@ -80,12 +105,13 @@ public class User implements Serializable {
     }
 
     public static User inputUserRegistration(BufferedReader reader) {
+
         try {
             System.out.println("Введите имя нового пользователя:");
             String username = reader.readLine();
             System.out.println("Введите пароль:");
             String password = reader.readLine();
-            User user = new User(username, password, UserRoles.USER);
+            User user = new User(username, password, UserRoles.USER,submittedReadings);
             user.setUsername(username);
             user.setPassword(password);
             return user;

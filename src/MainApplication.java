@@ -1,6 +1,7 @@
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.time.LocalDateTime;
 import java.util.List;
 
 
@@ -17,21 +18,30 @@ public class MainApplication {
 
 
     // Метод для обработки эндпоинта ввода данных по счетчику
-    public void submitCounterData(User user) {
-        try (BufferedReader reader = new BufferedReader(new InputStreamReader(System.in))) {
-            System.out.println("Введите данные по счетчику:");
-            double counterValue = Double.parseDouble(reader.readLine());
+    public void submitCounterData(User user,BufferedReader reader) {
+        LocalDateTime currentDate = LocalDateTime.now();
+        try {
+            // Проверяем, прошел ли месяц с последней подачи показаний
+            if (user.getLastSubmissionDate() == null || user.getLastSubmissionDate().plusMonths(1).isBefore(currentDate)) {
+                System.out.println("Введите данные по счетчику:");
+                double counterValue = Double.parseDouble(reader.readLine());
 
-            System.out.println("Введите месяц:");
-            String month = reader.readLine();
+                System.out.println("Введите месяц:");
+                String month = reader.readLine();
 
-            // Создаем объект Reading с введенными данными
-            Reading newReading = new Reading(user.getId(), counterValue, month);
+                // Создаем объект Reading с введенными данными
+                Reading newReading = new Reading(user.getId(), counterValue, month);
 
-            // Передаем объект Reading для обработки
-            readingManager.submitReading(newReading);
+                // Передаем объект Reading для обработки
+                readingManager.submitReading(newReading,user);
 
-            System.out.println("Данные по счетчику успешно добавлены.");
+                // Обновляем время последней подачи показаний
+                user.setLastSubmissionDate(currentDate);
+
+                System.out.println("Данные по счетчику успешно добавлены.");
+            } else {
+                System.out.println("Вы уже подавали показания в этом месяце. Подача показаний доступна один раз в месяц.");
+            }
         } catch (IOException | NumberFormatException e) {
             System.out.println("Ошибка ввода данных: " + e.getMessage());
         }
@@ -54,9 +64,9 @@ public class MainApplication {
     }
 
     // Метод для обработки эндпоинта подачи показаний
-    public void submitReading(Reading reading) {
+    public void submitReading(Reading reading,User user) {
         // Изменение: Передаем объект Reading, созданный в методе main
-        readingManager.submitReading(reading);
+        readingManager.submitReading(reading,user);
     }
 
     // Метод для обработки эндпоинта получения показаний за конкретный месяц
