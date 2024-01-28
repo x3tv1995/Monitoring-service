@@ -46,17 +46,21 @@ public class Reading implements Serializable {
 
 // Класс, управляющий показаниями
 class ReadingManager {
-
+    private List<Reading> allReadings;
     private final Map<Integer, List<Reading>> readingsByUser;
     private static final Logger LOGGER = Logger.getLogger(ReadingManager.class.getName());
 
     public ReadingManager() {
         this.readingsByUser = new HashMap<>();
+        this.allReadings = new ArrayList<>();
     }
 
-    public void submitReading(Reading reading) {
+    public void submitReading(Reading reading,User user) {
+        allReadings.add(reading);
+
         int userId = reading.getUserId();
         readingsByUser.computeIfAbsent(userId, k -> new ArrayList<>()).add(reading);
+        user.getSubmittedReadings().add(reading);
         System.out.println("Reading submitted for user " + userId + " in month " + reading.getMonth());
     }
 
