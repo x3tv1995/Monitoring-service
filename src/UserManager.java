@@ -17,7 +17,9 @@ public class UserManager {
     /**
      * Конструктор создает объект UserManager и инициализирует список пользователей данными из файла.
      */
-    public UserManager() {
+    public  UserManager() {
+
+
         this.users = readUserDataFromFile();
     }
 

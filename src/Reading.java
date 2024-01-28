@@ -182,7 +182,7 @@ class ReadingManager {
         }
         return monthReadings;
     }
-    private List<Reading> getReadingsForUser(int userId) {
+    List<Reading> getReadingsForUser(int userId) {
         return readingsByUser.getOrDefault(userId, new ArrayList<>());
     }
 }

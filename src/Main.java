@@ -18,6 +18,7 @@ public class Main {
      * @throws IOException Возможное исключение ввода/вывода при работе с BufferedReader.
      */
     public static void main(String[] args) throws IOException {
+
         try (BufferedReader reader = new BufferedReader(new InputStreamReader(System.in))) {
             while (true) {
                 User user = registerOrAuthorize(reader);
@@ -66,7 +67,7 @@ public class Main {
      * @param reader BufferedReader для ввода данных пользователем.
      * @throws IOException Возможное исключение ввода/вывода при работе с BufferedReader.
      */
-    private static void processActions(User user, BufferedReader reader) throws IOException {
+    static void processActions(User user, BufferedReader reader) throws IOException {
         initAdmin();
         while (true) {
             showMenu(user, reader);
@@ -129,7 +130,7 @@ public class Main {
     /**
      * Инициализирует администратора системы.
      */
-    private static void initAdmin() {
+    protected static void initAdmin() {
         User admin = new User("admin", "123", UserRoles.ADMIN);
         userManager.registerUser(admin);
     }
@@ -137,7 +138,7 @@ public class Main {
     /**
      * Показывает показания водосчетчиков всех пользователей, кроме администратора.
      */
-    private static void showReadingsOfAllUsers() {
+    static void showReadingsOfAllUsers() {
         userManager.getUsers().forEach(u -> {
             if (!u.getRole().equals(UserRoles.ADMIN)) {
                 System.out.print("Пользователь " + u.getUsername() + ", показания: ");
@@ -150,7 +151,7 @@ public class Main {
             }
         });
     }
-    private static void submitCounterData(User user, BufferedReader reader) throws IOException {
+    static void submitCounterData(User user, BufferedReader reader) throws IOException {
         System.out.println("Введите данные по счетчику:");
         double hotWaterCounter;
         while (true) {
@@ -201,6 +202,7 @@ public class Main {
 
         System.out.println("Данные по счетчику успешно добавлены.");
     }
+
 
 
 }

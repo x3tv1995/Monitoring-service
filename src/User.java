@@ -27,6 +27,9 @@ public class User implements Serializable {
 
     private LocalDateTime lastSubmissionDate;
 
+
+
+
     public List<Reading> getSubmittedReadings() {
         return submittedReadings;
     }
