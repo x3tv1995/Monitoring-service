@@ -3,97 +3,55 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.List;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.util.List;
-
+/**
+ * Класс Main представляет основное приложение для управления показаниями водосчетчиков.
+ * Взаимодействует с UserManager, ReadingManager и другими классами для обработки действий пользователей.
+ */
 public class Main {
     private static UserManager userManager = new UserManager();
     private static ReadingManager readingManager = new ReadingManager();
 
+    /**
+     * Точка входа в программу.
+     *
+     * @param args Параметры командной строки (не используются).
+     * @throws IOException Возможное исключение ввода/вывода при работе с BufferedReader.
+     */
     public static void main(String[] args) throws IOException {
-        User user = null;
-        MainApplication mainApp = null;
-
-        BufferedReader reader = null;
-        try {
-
-            reader = new BufferedReader(new InputStreamReader(System.in));
-            user = initMenu(reader);
-            mainApp = processLogin(user, userManager, readingManager, reader);
-
-            if (mainApp != null) {
-                // Остальной код приложения
-                Reading newReading = new Reading(user.getId(), 100.0, "January");
-
-                // Подаем показания
-                mainApp.submitReading(newReading, user);
-
-                // Получаем актуальные показания
-                mainApp.getActualReadings(user);
-
-                // Получаем историю показаний
-                mainApp.getReadingHistory(user);
+        try (BufferedReader reader = new BufferedReader(new InputStreamReader(System.in))) {
+            while (true) {
+                User user = registerOrAuthorize(reader);
+                if (user != null) {
+                    processActions(user, reader);
+                } else {
+                    System.out.println("Пользователь не найден. Повторите попытку.");
+                }
             }
-        } finally {
-            if (reader != null) {
-                reader.close();
-            }
-        }
-
-        // Пример использования класса MainApplication
-        if (user != null && mainApp != null) {
-            // Проверьте, что user и mainApp не являются null, прежде чем использовать их
-            Reading newReading = new Reading(user.getId(), 100.0, "January");
-
-            // Подаем показания
-            mainApp.submitReading(newReading, user);
-
-            // Получаем актуальные показания
-            List<Reading> actualReadings = mainApp.getActualReadings(user);
-            System.out.println("Actual Readings: " + actualReadings);
-
-            // Получаем историю показаний
-            List<Reading> historyReadings = mainApp.getReadingHistory(user);
-            System.out.println("Reading History: " + historyReadings);
+        } catch (IOException e) {
+            e.printStackTrace();
         }
     }
 
-    private static MainApplication processLogin(User user, UserManager userManager, ReadingManager readingManager, BufferedReader reader) throws IOException {
-        MainApplication mainApp = null;
-
-        if (user != null) {
-            mainApp = new MainApplication(userManager, readingManager);
-
-            // Вход выполнен успешно, выполните нужные действия
-            // Например, получите показания, историю и т.д.
-            showUserMenu(user, mainApp, reader);
-            mainApp.getActualReadings(user);
-            mainApp.getReadingHistory(user);
-
-            mainApp.submitCounterData(user, reader); // Добавлен вызов метода ввода данных по счетчику
-            // Добавьте другие действия по мере необходимости
-        }
-
-        return mainApp;
-    }
-
-    private static User initMenu(BufferedReader reader) throws IOException {
-        boolean str = true;
+    /**
+     * Регистрирует или авторизует пользователя в системе.
+     *
+     * @param reader BufferedReader для ввода данных пользователем.
+     * @return Объект User, представляющий зарегистрированного или авторизованного пользователя.
+     * @throws IOException Возможное исключение ввода/вывода при работе с BufferedReader.
+     */
+    private static User registerOrAuthorize(BufferedReader reader) throws IOException {
         User user = null;
-
-        while (str) {
-            System.out.println("Нажмите 1 для входа, 2 для регистрации :");
+        while (user == null) {
+            System.out.println("Нажмите 1 для входа, 2 для регистрации:");
             String choice = reader.readLine();
             if ("1".equals(choice)) {
                 user = User.inputUserAuthorization(reader, userManager);
-                str = false;
+                if (user == null) {
+                    System.out.println("Авторизация не удалась. Повторите попытку.");
+                }
             } else if ("2".equals(choice)) {
                 user = User.inputUserRegistration(reader);
-                userManager.getUsers().add(user);
                 userManager.registerUser(user);
-                str = false;
             } else {
                 System.out.println("Некорректный выбор.");
             }
@@ -101,52 +59,97 @@ public class Main {
         return user;
     }
 
-    private static User showUserMenu(User user, MainApplication mainApp, BufferedReader reader) throws IOException {
-        boolean exitMenu = false;
-
-
-        try {
-            while (!exitMenu) {
-                System.out.println("Выберите действие:");
-                System.out.println("1. Подача показаний");
-                System.out.println("2. История показаний");
-                System.out.println("3. Выйти");
-
-
-                String choice = reader.readLine();
-                switch (choice) {
-                    case "1":
-                        mainApp.submitCounterData(user, reader);
-                        break;
-                    case "2":
-                        initMenu(reader);
-                        break;
-                    case "3":
-                        showReadingHistory(user);
-                        break;
-                    default:
-                        System.out.println("Некорректный выбор.");
-                        break;
-                }
+    /**
+     * Обрабатывает действия пользователя в основном меню приложения.
+     *
+     * @param user   Текущий пользователь.
+     * @param reader BufferedReader для ввода данных пользователем.
+     * @throws IOException Возможное исключение ввода/вывода при работе с BufferedReader.
+     */
+    private static void processActions(User user, BufferedReader reader) throws IOException {
+        initAdmin();
+        while (true) {
+            showMenu(user, reader);
+            System.out.print("Введите номер действия: ");
+            int inputAction;
+            try {
+                inputAction = Integer.parseInt(reader.readLine());
+            } catch (NumberFormatException e) {
+                System.out.println("Некорректный ввод. Попробуйте еще раз.");
+                continue;
             }
-        } finally {
-            // Закрываем BufferedReader в блоке finally
-            if (reader != null) {
-                reader.close();
+            switch (inputAction) {
+                case 1:
+                    submitCounterData(user, reader);
+                    break;
+                case 2:
+                    if (user != null) {
+                        System.out.println("Ваши переданные показания: " + user.getSubmittedReadings());
+                    } else {
+                        System.out.println("Ошибка: пользователь не найден.");
+                    }
+                    break;
+                case 3:
+                    return;
+                case 4:
+                    if (user != null && user.getRole().equals(UserRoles.ADMIN)) {
+                        showReadingsOfAllUsers();
+                    }
+                    break;
+                default:
+                    System.out.println("Введенное число не соответствует ни одному действию. Попробуйте еще раз.");
+                    break;
             }
+        }
+    }
+
+    /**
+     * Отображает меню действий для пользователя.
+     *
+     * @param user   Текущий пользователь.
+     * @param reader BufferedReader для ввода данных пользователем.
+     * @return Текущий пользователь.
+     * @throws IOException Возможное исключение ввода/вывода при работе с BufferedReader.
+     */
+    private static User showMenu(User user, BufferedReader reader) throws IOException {
+        if (user == null) {
+            System.out.println("Ошибка: пользователь не найден.");
+            return registerOrAuthorize(reader);
+        }
+        System.out.println("Выберите действие:");
+        System.out.println("1. Подача показаний");
+        System.out.println("2. История показаний");
+        System.out.println("3. Выйти");
+        if (user.getRole().equals(UserRoles.ADMIN)) {
+            System.out.println("4. Показать показания всех пользователей");
         }
         return user;
     }
 
-    private static void showReadingHistory(User user) {
-        List<Reading> historyReadings = user.getSubmittedReadings();
-        if (historyReadings.isEmpty()) {
-            System.out.println("У вас нет поданных показаний.");
-        } else {
-            System.out.println("История поданных показаний:");
-            for (Reading reading : historyReadings) {
-                System.out.println("Месяц: " + reading.getMonth() + ", Показания: " + reading.getCounterValue());
-            }
-        }
+    /**
+     * Инициализирует администратора системы.
+     */
+    private static void initAdmin() {
+        User admin = new User("admin", "123", UserRoles.ADMIN);
+        userManager.registerUser(admin);
     }
-}
+
+    /**
+     * Показывает показания водосчетчиков всех пользователей, кроме администратора.
+     */
+    private static void showReadingsOfAllUsers() {
+        userManager.getUsers().forEach(u -> {
+            if (!u.getRole().equals(UserRoles.ADMIN)) {
+                System.out.print("Пользователь " + u.getUsername() + ", показания: ");
+                List<Reading> readings = u.getSubmittedReadings();
+                if (readings.isEmpty()) {
+                    System.out.println("[]");
+                } else {
+                    readings.forEach(r -> System.out.println(r.toString()));
+                }
+            }
+        });
+    }
+
+/**
+ * П
