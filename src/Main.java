@@ -128,13 +128,23 @@ public class Main {
             System.out.println("Ошибка: пользователь не найден.");
             return registerOrAuthorize(reader);
         }
+
         System.out.println("Выберите действие:");
-        System.out.println("1. Подача показаний");
-        System.out.println("2. История показаний");
-        System.out.println("3. Выйти");
-        if (user.getRole().equals(UserRoles.ADMIN)) {
-            System.out.println("4. Показать показания всех пользователей");
+
+        if (user.getRole().equals(UserRoles.USER)) {
+            // Пункты меню для обычного пользователя
+            System.out.println("1. Подача показаний");
+            System.out.println("2. История показаний");
         }
+
+        System.out.println("3. Выйти");
+
+        if (user.getRole().equals(UserRoles.ADMIN)) {
+            // Пункты меню для администратора
+            System.out.println("4. Показать показания всех пользователей");
+
+        }
+
         return user;
     }
 
