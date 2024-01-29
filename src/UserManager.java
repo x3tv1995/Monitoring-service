@@ -40,7 +40,9 @@ public class UserManager {
     public void registerUser(User user) {
         users.add(user);
         saveUserDataToFile();
-        System.out.println(UserAction.User_registered.getDescription());
+        if (!user.getRole().equals(UserRoles.ADMIN)) {
+            System.out.println(UserAction.User_registered.getDescription());
+        }
         logUserAction(user, UserAction.REGISTER);
     }
 
@@ -66,9 +68,9 @@ public class UserManager {
      * @param action Тип действия пользователя.
      */
     private void logUserAction(User user, UserAction action) {
-        if (user != null) {
+        if (user != null && !UserRoles.ADMIN.equals(user.getRole())) {
             LOGGER.info("User " + user.getUsername() + " " + action.getDescription());
-        } else {
+        } else if (user == null) {
             LOGGER.warning("Attempted to log user action for null user");
         }
     }

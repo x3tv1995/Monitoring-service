@@ -20,6 +20,7 @@ public class Main {
     public static void main(String[] args) throws IOException {
 
         try (BufferedReader reader = new BufferedReader(new InputStreamReader(System.in))) {
+            initAdmin();
             while (true) {
                 User user = registerOrAuthorize(reader);
                 if (user != null) {
@@ -78,7 +79,7 @@ public class Main {
      * @throws IOException Возможное исключение ввода/вывода при работе с BufferedReader.
      */
     static void processActions(User user, BufferedReader reader) throws IOException {
-        initAdmin();
+
         while (true) {
             showMenu(user, reader);
             System.out.print("Введите номер действия: ");

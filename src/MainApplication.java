@@ -28,7 +28,6 @@ public class MainApplication {
      */
 
     public List<Reading> getActualReadings(User user) {
-        // Получаем и выводим фактические показания из ReadingManager
         List<Reading> actualReadings = readingManager.getLatestReadings(user.getId(), user.getRole());
         System.out.println("Фактические показания: " + actualReadings);
         return actualReadings;
@@ -43,7 +42,6 @@ public class MainApplication {
      * @return Список исторических показаний.
      */
     public List<Reading> getReadingHistory(User user) {
-        // Получаем и выводим историю показаний из ReadingManager
         List<Reading> historyReadings = readingManager.getReadingHistory(user.getId());
         System.out.println("История показаний: " + historyReadings);
         return historyReadings;
