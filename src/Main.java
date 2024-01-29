@@ -123,7 +123,7 @@ public class Main {
      * @return Текущий пользователь.
      * @throws IOException Возможное исключение ввода/вывода при работе с BufferedReader.
      */
-    private static User showMenu(User user, BufferedReader reader) throws IOException {
+    static User showMenu(User user, BufferedReader reader) throws IOException {
         if (user == null) {
             System.out.println("Ошибка: пользователь не найден.");
             return registerOrAuthorize(reader);
@@ -132,7 +132,7 @@ public class Main {
         System.out.println("Выберите действие:");
 
         if (user.getRole().equals(UserRoles.USER)) {
-            // Пункты меню для обычного пользователя
+
             System.out.println("1. Подача показаний");
             System.out.println("2. История показаний");
         }
@@ -140,7 +140,7 @@ public class Main {
         System.out.println("3. Выйти");
 
         if (user.getRole().equals(UserRoles.ADMIN)) {
-            // Пункты меню для администратора
+
             System.out.println("4. Показать показания всех пользователей");
 
         }

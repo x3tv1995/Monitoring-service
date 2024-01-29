@@ -133,4 +133,32 @@ class MainTest {
         List<Reading> actualReadings = readingManager.getLatestReadings(user.getId(), user.getRole());
         assertEquals(0, actualReadings.size());
     }
+    @Test
+    public void testShowMenuForRegularUser() throws IOException {
+        User regularUser = new User("user1", "password1", UserRoles.USER);
+        BufferedReader reader = new BufferedReader(new StringReader("3\n"));
+
+        User resultUser = Main.showMenu(regularUser, reader);
+
+        assertEquals(regularUser, resultUser);
+    }
+
+    @Test
+    public void testShowMenuForAdminUser() throws IOException {
+        User adminUser = new User("admin", "adminpass", UserRoles.ADMIN);
+        BufferedReader reader = new BufferedReader(new StringReader("4\n"));
+
+        User resultUser = Main.showMenu(adminUser, reader);
+
+        assertEquals(adminUser, resultUser);
+    }
+
+    @Test
+    public void testShowMenuWithNullUser() throws IOException {
+        BufferedReader reader = new BufferedReader(new StringReader("3\n"));
+
+        User resultUser = Main.showMenu(null,reader);
+
+        assertNull(resultUser);
+    }
 }
