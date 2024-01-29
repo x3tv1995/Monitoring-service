@@ -42,21 +42,31 @@ public class Main {
      */
     private static User registerOrAuthorize(BufferedReader reader) throws IOException {
         User user = null;
-        while (user == null) {
+        boolean isAuthenticated = false;
+
+        while (!isAuthenticated) {
             System.out.println("Нажмите 1 для входа, 2 для регистрации:");
             String choice = reader.readLine();
+
             if ("1".equals(choice)) {
                 user = User.inputUserAuthorization(reader, userManager);
+                isAuthenticated = (user != null);
                 if (user == null) {
                     System.out.println("Авторизация не удалась. Повторите попытку.");
                 }
             } else if ("2".equals(choice)) {
-                user = User.inputUserRegistration(reader);
-                userManager.registerUser(user);
+                user = User.inputUserRegistration(reader, userManager);
+                if (user != null) {
+                    userManager.registerUser(user);
+                    isAuthenticated = true;
+                } else {
+                    System.out.println("Регистрация не удалась. Попробуйте еще раз.");
+                }
             } else {
                 System.out.println("Некорректный выбор.");
             }
         }
+
         return user;
     }
 
@@ -151,6 +161,16 @@ public class Main {
             }
         });
     }
+
+    /**
+     * Метод для ввода данных по счетчику от пользователя.
+     *
+     * @param user   Пользователь, для которого вводятся данные.
+     * @param reader BufferedReader для считывания ввода пользователя.
+     * @throws IOException              Возможное исключение ввода/вывода при работе с BufferedReader.
+     * @throws NumberFormatException    Исключение, возникающее при некорректном вводе числовых значений.
+     * @throws IllegalArgumentException Исключение, возникающее при вводе данных, не соответствующих допустимым пределам.
+     */
     static void submitCounterData(User user, BufferedReader reader) throws IOException {
         System.out.println("Введите данные по счетчику:");
         double hotWaterCounter;
@@ -175,7 +195,6 @@ public class Main {
             }
         }
 
-
         int month;
         while (true) {
             System.out.println("Введите месяц (от 1 до 12):");
@@ -191,14 +210,16 @@ public class Main {
             }
         }
 
-        // Создаем объект Reading с введенными данными
-        Reading newReading = new Reading(user.getId(), String.valueOf(month), hotWaterCounter, coldWaterCounter);
 
-        // Передаем объект Reading для обработки
+        if (user.hasSubmittedReadingForMonth(month)) {
+            System.out.println("Вы уже подали показания за этот месяц. Попробуйте в следующий раз.");
+            return;
+        }
+
+        Reading newReading = new Reading(user.getId(), month, hotWaterCounter, coldWaterCounter);
+
+
         readingManager.submitReading(newReading, user);
-
-        // Добавляем введенное показание в список поданных пользователем
-        user.addSubmittedReading(newReading);
 
         System.out.println("Данные по счетчику успешно добавлены.");
     }

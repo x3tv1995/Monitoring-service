@@ -83,11 +83,11 @@ public class User implements Serializable {
             String username = reader.readLine();
             if (userManager.isUserExists(username)) {
                 if ("admin".equals(username)) {
-                    // Введено имя администратора, запросить пароль
+
                     System.out.println("Введите пароль для администратора:");
                     String password = reader.readLine();
 
-                    // Проверить правильность пароля для администратора
+
                     if ("123".equals(password)) {
                         System.out.println("Вы успешно вошли как администратор!");
                         return new User(username, password, UserRoles.ADMIN);
@@ -95,50 +95,57 @@ public class User implements Serializable {
                         System.out.println("Неверный пароль для администратора. Попробуйте еще раз.");
                         return null;
                     }
-                } else {
-                    // Введено имя пользователя, сообщить об ошибке и попросить выбрать другое имя
-                    System.out.println("Пользователь с таким именем уже зарегистрирован. Попробуйте другое имя.");
-                    return null; // Возвращаем null, чтобы повторно запросить регистрацию
+
+                }
+                System.out.println("Введите пароль:");
+                String password = reader.readLine();
+
+
+                for (User user : userManager.getUsers()) {
+                    if (user.getUsername().equals(username) && user.getPassword().equals(password)) {
+                        System.out.println("Авторизация успешна.");
+                        return user;
+                    }
                 }
             }
-            System.out.println("Введите пароль:");
-            String password = reader.readLine();
-
-
-            for (User user : userManager.getUsers()) {
-                if (user.getUsername().equals(username) && user.getPassword().equals(password)) {
-                    System.out.println("Авторизация успешна.");
-                    // Установка роли пользователя
-                    return user;
-                }
-            }
-
 
             System.out.println("Пользователь с введенными данными не найден. Вам нужно зарегистрироваться");
         } catch (IOException e) {
             e.printStackTrace();
-        } catch (NullPointerException e) {
-            e.printStackTrace();
         }
         return null;
+
+
     }
 
-    public static User inputUserRegistration(BufferedReader reader) {
+        public static User inputUserRegistration (BufferedReader reader,UserManager userManager){
+            try {
+                System.out.println("Введите имя пользователя:");
+                String username = reader.readLine();
 
-        try {
-            System.out.println("Введите имя нового пользователя:");
-            String username = reader.readLine();
-            System.out.println("Введите пароль:");
-            String password = reader.readLine();
-            User user = new User(username, password, UserRoles.USER);
-            user.setUsername(username);
-            user.setPassword(password);
-            return user;
-        } catch (IOException e) {
-            e.printStackTrace();
+
+                if (userManager.isUserExists(username)) {
+                    System.out.println("Пользователь с таким именем уже зарегистрирован. Попробуйте другое имя.");
+                    return null;
+                }
+
+                System.out.println("Введите пароль:");
+                String password = reader.readLine();
+
+                // Возвращаем новый объект User для нового пользователя
+                return new User(username, password, UserRoles.USER);
+
+            } catch (IOException e) {
+                e.printStackTrace();
+            } catch (NullPointerException e) {
+                e.printStackTrace();
+            }
+            return null;
         }
-        return null;
-    }
+
+    public boolean hasSubmittedReadingForMonth(int month) {
+        return submittedReadings.stream().anyMatch(reading -> reading.getMonth() == month);
+    }}
 
 
-}
+

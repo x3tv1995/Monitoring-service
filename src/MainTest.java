@@ -25,7 +25,7 @@ class MainTest {
         System.setOut(originalSystemOut);
     }
 
-    // ... (ваш остальной код)
+
 
     @Test
     void processActions_AdminShowsReadings_ReturnsReadings() throws IOException {
@@ -80,10 +80,10 @@ class MainTest {
         User user2 = new User("user2", "password", UserRoles.USER);
         userManager.registerUser(user2);
 
-        Reading reading1 = new Reading(user1.getId(), "January", 10.0, 20.0);
+        Reading reading1 = new Reading(user1.getId(), 1, 10.0, 20.0);
         readingManager.submitReading(reading1, user1);
 
-        Reading reading2 = new Reading(user2.getId(), "February", 15.0, 25.0);
+        Reading reading2 = new Reading(user2.getId(), 2, 15.0, 25.0);
         readingManager.submitReading(reading2, user2);
 
         User admin = new User("admin", "123", UserRoles.ADMIN);

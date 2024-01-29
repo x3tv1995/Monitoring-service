@@ -7,7 +7,7 @@ class ReadingTest {
     @Test
     void createReading_ValidInput_Success() {
         int userId = 1;
-        String month = "January";
+        int month = 1;
         double hotWaterCounter = 10.5;
         double coldWaterCounter = 20.0;
 
@@ -22,7 +22,7 @@ class ReadingTest {
     @Test
     void toString_ReturnsExpectedString() {
         int userId = 1;
-        String month = "January";
+       int month = 1;
         double hotWaterCounter = 10.5;
         double coldWaterCounter = 20.0;
 
@@ -45,7 +45,7 @@ class ReadingManagerTest {
     void submitReading_ValidInput_Success() {
         ReadingManager readingManager = new ReadingManager();
         User user = new User("testUser", "password", UserRoles.USER);
-        readingManager.submitReading(new Reading(1, "January", 10.0, 20.0), user);
+        readingManager.submitReading(new Reading(1, 1, 10.0, 20.0), user);
 
         List<Reading> userReadings = readingManager.getReadingsForUser(user.getId());
         assertEquals(1, userReadings.size());
@@ -54,8 +54,8 @@ class ReadingManagerTest {
     @Test
     void getLatestReadings_AdminRole_ReturnsAllReadings() {
         ReadingManager readingManager = new ReadingManager();
-        readingManager.submitReading(new Reading(1, "January", 10.0, 20.0), new User("admin", "admin", UserRoles.ADMIN));
-        readingManager.submitReading(new Reading(2, "February", 15.0, 25.0), new User("testUser", "password", UserRoles.USER));
+        readingManager.submitReading(new Reading(1, 1, 10.0, 20.0), new User("admin", "admin", UserRoles.ADMIN));
+        readingManager.submitReading(new Reading(2, 2, 15.0, 25.0), new User("testUser", "password", UserRoles.USER));
 
         List<Reading> actualReadings = readingManager.getLatestReadings(1, UserRoles.ADMIN);
         assertEquals(2, actualReadings.size());
@@ -64,8 +64,8 @@ class ReadingManagerTest {
     @Test
     void getLatestReadings_UserRole_ReturnsUserReadings() {
         ReadingManager readingManager = new ReadingManager();
-        readingManager.submitReading(new Reading(1, "January", 10.0, 20.0), new User("admin", "admin", UserRoles.ADMIN));
-        readingManager.submitReading(new Reading(2, "February", 15.0, 25.0), new User("testUser", "password", UserRoles.USER));
+        readingManager.submitReading(new Reading(1, 1, 10.0, 20.0), new User("admin", "admin", UserRoles.ADMIN));
+        readingManager.submitReading(new Reading(2, 2, 15.0, 25.0), new User("testUser", "password", UserRoles.USER));
 
         List<Reading> actualReadings = readingManager.getLatestReadings(2, UserRoles.USER);
         assertEquals(1, actualReadings.size());

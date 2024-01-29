@@ -11,12 +11,13 @@ import java.util.logging.Logger;
  * Реализует интерфейс Serializable для обеспечения возможности сериализации объектов.
  */
 public class Reading implements Serializable {
-    private final int userId;         // Идентификатор пользователя
+    private final int userId;
 
-    private final String month;        // Месяц
 
-    private double hotWaterCounter;    // Значение счетчика горячей воды
-    private double coldWaterCounter;   // Значение счетчика холодной воды
+    private final int month;
+
+    private double hotWaterCounter;
+    private double coldWaterCounter;
 
     /**
      * Конструктор для создания объекта Reading с заданными параметрами.
@@ -26,7 +27,7 @@ public class Reading implements Serializable {
      * @param hotWaterCounter  Значение счетчика горячей воды.
      * @param coldWaterCounter Значение счетчика холодной воды.
      */
-    public Reading(int userId, String month, double hotWaterCounter, double coldWaterCounter) {
+    public Reading(int userId, int month, double hotWaterCounter, double coldWaterCounter) {
         this.userId = userId;
         this.month = month;
         this.hotWaterCounter = hotWaterCounter;
@@ -65,9 +66,10 @@ public class Reading implements Serializable {
      *
      * @return Месяц.
      */
-    public String getMonth() {
+    public int getMonth() {
         return month;
     }
+
 
     /**
      * Переопределенный метод toString для возврата строкового представления объекта Reading.
@@ -165,23 +167,8 @@ class ReadingManager {
         return getReadingsForUser(userId);
     }
 
-    /**
-     * Метод возвращает показания за указанный месяц для конкретного пользователя.
-     *
-     * @param userId Идентификатор пользователя.
-     * @param month  Месяц, за который запрашиваются показания.
-     * @return Список показаний за указанный месяц.
-     */
-    public List<Reading> getMonthReadings(int userId, String month) {
-        List<Reading> readings = getReadingsForUser(userId);
-        List<Reading> monthReadings = new ArrayList<>();
-        for (Reading reading : readings) {
-            if (reading.getMonth().equals(month)) {
-                monthReadings.add(reading);
-            }
-        }
-        return monthReadings;
-    }
+
+
     List<Reading> getReadingsForUser(int userId) {
         return readingsByUser.getOrDefault(userId, new ArrayList<>());
     }

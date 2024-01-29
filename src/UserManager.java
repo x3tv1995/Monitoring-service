@@ -11,8 +11,8 @@ import java.util.logging.Logger;
 public class UserManager {
     private static final Logger LOGGER = Logger.getLogger(UserManager.class.getName());
 
-    private final List<User> users;         // Список зарегистрированных пользователей
-    private final String dataFileName = "user_data.ser"; // Название файла для сохранения данных
+    private final List<User> users;
+    private final String dataFileName = "user_data.ser";
 
     /**
      * Конструктор создает объект UserManager и инициализирует список пользователей данными из файла.
@@ -66,7 +66,11 @@ public class UserManager {
      * @param action Тип действия пользователя.
      */
     private void logUserAction(User user, UserAction action) {
-        LOGGER.info("User " + user.getUsername() + " " + action.getDescription());
+        if (user != null) {
+            LOGGER.info("User " + user.getUsername() + " " + action.getDescription());
+        } else {
+            LOGGER.warning("Attempted to log user action for null user");
+        }
     }
 
     /**
