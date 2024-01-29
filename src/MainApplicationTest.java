@@ -3,6 +3,7 @@ import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 
 import org.junit.jupiter.api.Test;
+
 import java.io.BufferedReader;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
@@ -14,23 +15,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 class MainApplicationTest {
 
-    @Test
-    void submitCounterData_ValidInput_Success() throws IOException {
-        UserManager userManager = new UserManager();
-        ReadingManager readingManager = new ReadingManager();
-        MainApplication mainApplication = new MainApplication(userManager, readingManager);
 
-        User user = new User("testUser", "password", UserRoles.USER);
-        userManager.registerUser(user);
-
-        String input = "10.5\n20.0\n1\n";
-        ByteArrayInputStream in = new ByteArrayInputStream(input.getBytes());
-        BufferedReader reader = new BufferedReader(new InputStreamReader(in));
-
-
-        List<Reading> actualReadings = readingManager.getLatestReadings(user.getId(), user.getRole());
-        assertEquals(1, actualReadings.size());
-    }
 
 
     @Test

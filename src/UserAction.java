@@ -1,4 +1,5 @@
 import java.io.Serializable;
+import java.util.logging.Logger;
 
 public enum UserAction implements Serializable {
 
@@ -8,6 +9,7 @@ public enum UserAction implements Serializable {
     DROP_PROFILE("удалил профиль"),
 
     User_registered("Пользователь зарегестрирован");
+    private static final Logger LOGGER = Logger.getLogger(UserAction.class.getName());
 
 
     private final String description;
@@ -27,5 +29,8 @@ public enum UserAction implements Serializable {
             }
         }
         return NULL;
+    }
+    public void log(User user) {
+        LOGGER.info("User " + user.getUsername() + " " + getDescription());
     }
 }

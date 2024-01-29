@@ -1,5 +1,7 @@
 import org.junit.jupiter.api.Test;
+
 import java.util.List;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 class ReadingTest {
@@ -22,7 +24,7 @@ class ReadingTest {
     @Test
     void toString_ReturnsExpectedString() {
         int userId = 1;
-       int month = 1;
+        int month = 1;
         double hotWaterCounter = 10.5;
         double coldWaterCounter = 20.0;
 

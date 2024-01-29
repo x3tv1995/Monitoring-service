@@ -1,8 +1,10 @@
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+
 import java.io.*;
 import java.util.List;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 class MainTest {
@@ -21,7 +23,6 @@ class MainTest {
         System.setIn(originalSystemIn);
         System.setOut(originalSystemOut);
     }
-
 
 
     @Test
@@ -58,7 +59,7 @@ class MainTest {
         User admin = new User("admin", "123", UserRoles.ADMIN);
         userManager.registerUser(admin);
 
-        Main.processActions( admin, new BufferedReader(new InputStreamReader(System.in)));
+        Main.processActions(admin, new BufferedReader(new InputStreamReader(System.in)));
 
         String output = outputStreamCaptor.toString().trim();
         assertTrue(output.contains("Введите номер действия:"));

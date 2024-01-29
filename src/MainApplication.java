@@ -12,7 +12,7 @@ public class MainApplication {
     /**
      * Конструктор для создания нового экземпляра MainApplication с заданными UserManager и ReadingManager.
      *
-     * @param userManager   Экземпляр UserManager для управления действиями, связанными с пользователями.
+     * @param userManager    Экземпляр UserManager для управления действиями, связанными с пользователями.
      * @param readingManager Экземпляр ReadingManager для управления показаниями водосчетчиков.
      */
     public MainApplication(UserManager userManager, ReadingManager readingManager) {
@@ -32,7 +32,6 @@ public class MainApplication {
         System.out.println("Фактические показания: " + actualReadings);
         return actualReadings;
     }
-
 
 
     /**

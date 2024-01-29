@@ -28,8 +28,6 @@ public class User implements Serializable {
     private LocalDateTime lastSubmissionDate;
 
 
-
-
     public List<Reading> getSubmittedReadings() {
         return submittedReadings;
     }
@@ -118,34 +116,35 @@ public class User implements Serializable {
 
     }
 
-        public static User inputUserRegistration (BufferedReader reader,UserManager userManager){
-            try {
-                System.out.println("Введите имя пользователя:");
-                String username = reader.readLine();
+    public static User inputUserRegistration(BufferedReader reader, UserManager userManager) {
+        try {
+            System.out.println("Введите имя пользователя:");
+            String username = reader.readLine();
 
 
-                if (userManager.isUserExists(username)) {
-                    System.out.println("Пользователь с таким именем уже зарегистрирован. Попробуйте другое имя.");
-                    return null;
-                }
-
-                System.out.println("Введите пароль:");
-                String password = reader.readLine();
-
-                // Возвращаем новый объект User для нового пользователя
-                return new User(username, password, UserRoles.USER);
-
-            } catch (IOException e) {
-                e.printStackTrace();
-            } catch (NullPointerException e) {
-                e.printStackTrace();
+            if (userManager.isUserExists(username)) {
+                System.out.println("Пользователь с таким именем уже зарегистрирован. Попробуйте другое имя.");
+                return null;
             }
-            return null;
+
+            System.out.println("Введите пароль:");
+            String password = reader.readLine();
+
+
+            return new User(username, password, UserRoles.USER);
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (NullPointerException e) {
+            e.printStackTrace();
         }
+        return null;
+    }
 
     public boolean hasSubmittedReadingForMonth(int month) {
         return submittedReadings.stream().anyMatch(reading -> reading.getMonth() == month);
-    }}
+    }
+}
 
 
 

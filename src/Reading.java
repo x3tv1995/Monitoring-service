@@ -6,6 +6,7 @@ import java.util.Map;
 import java.util.logging.Logger;
 
 // Класс, представляющий показания счетчика
+
 /**
  * Класс Reading представляет сущность для хранения данных о показаниях водосчетчика.
  * Реализует интерфейс Serializable для обеспечения возможности сериализации объектов.
@@ -166,7 +167,6 @@ class ReadingManager {
     public List<Reading> getReadingHistory(int userId) {
         return getReadingsForUser(userId);
     }
-
 
 
     List<Reading> getReadingsForUser(int userId) {
