@@ -17,7 +17,7 @@ class UserActionTest {
 
         assertEquals("User testUser Пользователь зарегестрирован\n", outContent.toString());
 
-        // Reset System.out to its original PrintStream
+
         System.setOut(System.out);
     }
 }
